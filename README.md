@@ -2,97 +2,120 @@
   
 # 😷 Real-Time Face Mask Detection System
 
-### *Achieving 96% Accuracy with VGG16 Transfer Learning*
+### *Flask + TensorFlow + OpenCV Web Application*
 
 [![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
-[![TensorFlow](https://img.shields.io/badge/TensorFlow-2.0+-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white)](https://tensorflow.org)
-[![Keras](https://img.shields.io/badge/Keras-2.4+-D00000?style=for-the-badge&logo=keras&logoColor=white)](https://keras.io)
-[![OpenCV](https://img.shields.io/badge/OpenCV-4.5+-5C3EE8?style=for-the-badge&logo=opencv&logoColor=white)](https://opencv.org)
-[![Accuracy](https://img.shields.io/badge/Accuracy-96%25-brightgreen?style=for-the-badge)]()
-[![Status](https://img.shields.io/badge/Status-Production_Ready-blue?style=for-the-badge)]()
+[![Flask](https://img.shields.io/badge/Flask-2.0.1-000000?style=for-the-badge&logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
+[![TensorFlow](https://img.shields.io/badge/TensorFlow-2.6.0-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white)](https://tensorflow.org)
+[![OpenCV](https://img.shields.io/badge/OpenCV-4.5.3-5C3EE8?style=for-the-badge&logo=opencv&logoColor=white)](https://opencv.org)
+[![Status](https://img.shields.io/badge/Status-Working-brightgreen?style=for-the-badge)]()
 
 </div>
 
 ---
 
-## 📌 Quick Navigation
-- [Project Overview](#-project-overview)
-- [Architecture](#-system-architecture)
-- [Performance Metrics](#-performance-metrics)
-- [Installation](#-quick-start)
-- [Tech Stack](#️-tech-stack)
-- [Future Roadmap](#-future-roadmap)
+## 📌 Project Overview
+
+> **A real-time face mask detection web application using a pre-trained Keras model, Flask backend, and OpenCV for webcam feed processing.**
+
+This system captures live video from your webcam, processes each frame through a CNN model, and displays whether a mask is detected or not.
+
+### What It Does:
+- 🎥 Captures live webcam feed
+- 🧠 Processes frames using a pre-trained `.h5` Keras model
+- ✅ Displays "Mask" (green) or "No Mask" (red) label on video
+- 🌐 Streams video to a web browser interface
 
 ---
 
-## 🎯 Project Overview
+## 🏗️ Architecture
 
-> **A production-ready computer vision system that detects face masks in real-time video streams with 96% accuracy, designed for COVID-19 safety compliance in public spaces.**
+┌─────────────────┐ Web Browser ┌─────────────────┐
+│ Webcam (USB) │ ┌──────────────────► │ index.html │
+│ Video Source │ │ │ (Frontend) │
+└────────┬────────┘ │ └────────┬────────┘
+│ │ │
+▼ │ ▼
+┌─────────────────┐ │ ┌─────────────────┐
+│ OpenCV Capture │ │ │ Flask Server │
+│ (cv2.VideoCapture)│◄──────────────────│ (app.py) │
+└────────┬────────┘ │ HTTP GET │ Port 5000 │
+│ │ /video_feed └────────┬────────┘
+▼ │ │
+┌─────────────────┐ │ │
+│ Preprocessing │ │ │
+│ Resize to │ │ │
+│ 224x224 │ │ │
+└────────┬────────┘ │ │
+│ │ │
+▼ │ ▼
+┌─────────────────┐ │ ┌─────────────────┐
+│ Keras Model │ │ │ mask_detector │
+│ (mask_detector │ │ │ .py (Model │
+│ .h5) │ │ │ Loading) │
+└────────┬────────┘ │ └─────────────────┘
+│ │
+▼ │
+┌─────────────────┐ │
+│ Prediction: │ │
+│ 0 = Mask │ │
+│ 1 = No Mask │ │
+└────────┬────────┘ │
+│ │
+▼ │
+┌─────────────────┐ │
+│ Draw Label │ │
+│ Green/Red Box │ │
+│ + Text │ │
+└────────┬────────┘ │
+│ │
+▼ │
+┌─────────────────┐ │
+│ JPEG Encode │ │
+│ & Stream to ├─┘
+│ Browser │
+└─────────────────┘
 
-This system processes live webcam feeds or video files to instantly identify individuals wearing masks versus those not wearing masks. Built for deployment in:
-- 🏢 Corporate offices & factories
-- 🏥 Hospitals & healthcare facilities
-- 🏫 Educational institutions
-- ✈️ Airports & transportation hubs
-- 🛍️ Retail stores & malls
 
 
-## 🏗️ System Architecture
-┌─────────────────────────────────────────────────────────────┐
-│ Input Video Stream │
-│ (Webcam / CCTV / Video File) │
-└─────────────────────────┬───────────────────────────────────┘
-▼
-┌─────────────────────────────────────────────────────────────┐
-│ Face Detection (Haar Cascade / MTCNN) │
-│ "Locate all human faces in the frame" │
-└─────────────────────────┬───────────────────────────────────┘
-▼
-┌─────────────────────────────────────────────────────────────┐
-│ Preprocessing Pipeline │
-│ • Resize to 224x224 • Normalize pixels • Data Augmentation│
-└─────────────────────────┬───────────────────────────────────┘
-▼
-┌─────────────────────────────────────────────────────────────┐
-│ VGG16 CNN Model (Transfer Learning) │
-│ ┌─────────────────────────────────────────────────────┐ │
-│ │ Conv Layers (pretrained) → FC Layers → Sigmoid │ │
-│ └─────────────────────────────────────────────────────┘ │
-└─────────────────────────┬───────────────────────────────────┘
-▼
-┌─────────────────────────────────────────────────────────────┐
-│ Output Classification │
-│ 😷 "Mask Detected" vs ❌ "No Mask" │
-└─────────────────────────────────────────────────────────────┘
+---
+
+## ✨ Features (What Actually Exists)
+
+| Feature | Implementation |
+|---------|----------------|
+| **Live Webcam Feed** | OpenCV `VideoCapture(0)` |
+| **Face Mask Detection** | Pre-trained Keras model (`mask_detector.h5`) |
+| **Real-time Streaming** | Flask streaming response (multipart/x-mixed-replace) |
+| **Visual Feedback** | Green "Mask" label / Red "No Mask" label |
+| **Web Interface** | `index.html` template |
+
+---
+
+## 📁 Project Structure (Actual)
+
+realtime-facemask-detection/
+│
+├── app.py # Flask server & video feed route
+├── mask_detector.py # Model loading + detection logic
+├── index.html # Frontend web page (templates/)
+├── requirements.txt # Python dependencies
+├── README.md # Documentation
+│
+└── model/ # (Assumed - for .h5 file)
+└── mask_detector.h5 # Pre-trained Keras weights
 
 
-## 📊 Performance Metrics
-
-| Metric | Score |
-|--------|-------|
-| **Accuracy** | 🎯 **96%** |
-| **Precision** | 0.95 |
-| **Recall** | 0.94 |
-| **F1-Score** | 0.945 |
-| **Inference Speed** | ⚡ 25ms per frame (~40 FPS) |
-| **Model Size** | 528 MB (VGG16) |
-
-### Confusion Matrix
-Predicted
-Mask No Mask
-Actual Mask 950 50
-No Mask 60 940
+---
 
 ## 🚀 Quick Start
 
 ### Prerequisites
-
 ```bash
 Python 3.8+
-pip (Python package manager)
-Git
+Webcam connected to your computer
 
-Installation & Setup
+Installation
 # 1. Clone the repository
 git clone https://github.com/areebajavid/realtime-facemask-detection.git
 cd realtime-facemask-detection
@@ -106,56 +129,28 @@ venv\Scripts\activate     # Windows
 # 3. Install dependencies
 pip install -r requirements.txt
 
-# 4. Run the application
+Run the Application
+# Start the Flask server
 python app.py
 
-# 5. Open browser and go to
-http://localhost:5000
 
-Usage Options
-# Real-time webcam detection
-python app.py --source webcam
+🔧 Dependencies (From requirements.txt)
+Package	Version
+Flask	2.0.1
+TensorFlow	2.6.0
+opencv-python	4.5.3.56
+numpy	1.19.5
 
-# Process a video file
-python app.py --source path/to/video.mp4
 
-# Process an image
-python app.py --source path/to/image.jpg --output result.jpg
+🖥️ Usage Instructions
+Run the server: python app.py
 
-📁 Project Structure
-realtime-facemask-detection/
-│
-├── app.py                   # 🚀 Main application entry point
-├── mask_detector.py         # 🧠 CNN model training & inference
-├── index.html               # 🌐 Web interface
-├── requirements.txt         │ 📦 Dependencies
-│
-├── model/                   # Saved model weights
-│   └── mask_detector.h5     # Trained VGG16 weights
-│
-├── dataset/                 # Training data
-│   ├── with_mask/           # Images with masks (5000+)
-│   └── without_mask/        # Images without masks (5000+)
-│
-├── utils/                   # Helper functions
-│   ├── face_detection.py    # Face alignment utilities
-│   └── preprocessing.py     # Image preprocessing
-│
-└── outputs/                 # Detection results
-    └── detected_frames/     # Saved output frames
+Open browser to http://localhost:5000
 
-🛠️ Tech Stack
-<p align="center"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" alt="python" width="60" height="60"/> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/tensorflow/tensorflow-original.svg" alt="tensorflow" width="60" height="60"/> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/opencv/opencv-original.svg" alt="opencv" width="60" height="60"/> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/flask/flask-original.svg" alt="flask" width="60" height="60"/> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/html5/html5-original.svg" alt="html5" width="60" height="60"/> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/css3/css3-original.svg" alt="css3" width="60" height="60"/> </p>
+Allow camera permissions
 
-📈 Future Roadmap
-Model Optimization - Convert to TensorFlow Lite for mobile deployment
+Show your face to the webcam:
 
-Edge Deployment - Raspberry Pi / Jetson Nano support
+Wearing a mask → Green "Mask" label
 
-Mask Quality Check - Detect N95 vs surgical vs cloth masks
-
-API Development - REST API for third-party integration
-
-Dashboard - Real-time analytics dashboard with alerts
-
-Mobile App - React Native wrapper for iOS/Android
+No mask → Red "No Mask" label
