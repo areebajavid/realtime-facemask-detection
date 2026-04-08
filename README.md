@@ -36,15 +36,6 @@ This system processes live webcam feeds or video files to instantly identify ind
 - ✈️ Airports & transportation hubs
 - 🛍️ Retail stores & malls
 
-## 🎥 Live Demo
-
-<div align="center">
-  
-| Input | Output |
-|:-----:|:------:|
-| ![Webcam Feed](https://via.placeholder.com/300x200?text=Live+Webcam+Input) | ![Detection Result](https://via.placeholder.com/300x200?text=😷+Mask+Detected) |
-
-</div>
 
 ## 🏗️ System Architecture
 ┌─────────────────────────────────────────────────────────────┐
