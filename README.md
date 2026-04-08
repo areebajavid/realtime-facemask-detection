@@ -17,7 +17,6 @@
 
 ## 📌 Quick Navigation
 - [Project Overview](#-project-overview)
-- [Live Demo](#-live-demo)
 - [Architecture](#-system-architecture)
 - [Performance Metrics](#-performance-metrics)
 - [Installation](#-quick-start)
